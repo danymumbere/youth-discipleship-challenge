@@ -1,0 +1,226 @@
+/* -------------------------------------------------
+   Youth Discipleship Challenge – style.css
+   Professional, accessible, mobile‑first stylesheet
+   ------------------------------------------------- */
+
+/* ==================== Variables ==================== */
+:root {
+  /* Light theme palette */
+  --bg-color: #ffffff;
+  --text-color: #212121;
+  --primary: #0d47a1;          /* Deep blue */
+  --secondary: #1976d2;        /* Medium blue */
+  --surface: #f5f5f5;          /* Light grey background */
+  --on-surface: #212121;       /* Text on surface */
+  --error: #b00020;            /* Red */
+  --on-error: #ffffff;         /* White text on error */
+  --badge-bg: #e3f2fd;         /* Very light blue for badge */
+  --badge-text: #0d47a1;       /* Dark blue text for badge */
+  --border-radius: 8px;
+  --spacing-unit: 8px;         /* Base spacing (8 px) */
+  --font-family: 'Roboto', system-ui, sans-serif;
+  --font-size-base: 16px;      /* 1 rem */
+  --font-size-heading: 1.5rem;
+  --font-size-body: 1rem;
+  --font-size-small: 0.875rem;
+  --line-height: 1.5;
+  --shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Dark theme – respects OS preference */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-color: #121212;
+    --text-color: #e0e0e0;
+    --primary: #90caf9;
+    --secondary: #42a5f5;
+    --surface: #1e1e1e;
+    --on-surface: #e0e0e0;
+    --error: #cf6679;
+    --on-error: #000000;
+    --badge-bg: #1565c0;
+    --badge-text: #e3f2fd;
+  }
+}
+
+/* High‑contrast mode – toggled via JS class */
+.high-contrast {
+  --bg-color: #000000;
+  --text-color: #ffffff;
+  --primary: #00ffff;
+  --secondary: #00eeff;
+  --surface: #222222;
+  --on-surface: #ffffff;
+  --error: #ff4444;
+  --on-error: #000000;
+  --badge-bg: #0044ff;
+  --badge-text: #ffffff;
+}
+
+/* ==================== Reset & Base ==================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html {
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height);
+  color: var(--text-color);
+  background-color: var(--bg-color);
+  scroll-behavior: smooth;
+}
+body {
+  margin: 0;
+  padding: calc(var(--spacing-unit) * 2);
+  max-width: 390px;          /* Prevent horizontal overflow */
+  margin: 0 auto;            /* Center on larger screens */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Typography */
+h1, h2, h3 {
+  margin: calc(var(--spacing-unit) * 2) 0;
+  line-height: 1.2;
+  font-weight: 400;
+}
+h1 { font-size: var(--font-size-heading); }
+h2 { font-size: 1.25rem; }
+p { margin: calc(var(--spacing-unit) * 2) 0; }
+
+/* ==================== Layout Containers ==================== */
+header,
+main,
+footer {
+  background: var(--surface);
+  border-radius: var(--border-radius);
+  padding: calc(var(--spacing-unit) * 2);
+  margin-bottom: calc(var(--spacing-unit) * 2);
+  box-shadow: var(--shadow);
+}
+
+/* ==================== Buttons & Interactive Elements ==================== */
+button,
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;          /* Touch‑target size */
+  padding: 0 calc(var(--spacing-unit) * 2);
+  border: none;
+  border-radius: var(--border-radius);
+  background: var(--primary);
+  color: var(--on-error);
+  font-size: var(--font-size-body);
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s;
+}
+button:hover,
+.btn:hover,
+button:focus,
+.btn:focus {
+  background: var(--secondary);
+  outline: 3px solid var(--secondary);
+}
+button:disabled,
+.btn:disabled {
+  background: var(--surface);
+  color: var(--on-surface);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+button:active,
+.btn:active {
+  transform: scale(0.97);
+}
+
+/* ==================== Badge Card ==================== */
+.badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: calc(var(--spacing-unit) * 2);
+  background: var(--badge-bg);
+  color: var(--badge-text);
+  border-radius: var(--border-radius);
+  text-align: center;
+}
+.badge img {
+  max-width: 100%;
+  height: auto;
+  border-radius: calc(var(--border-radius) / 2);
+}
+
+/* ==================== Progress Timeline ==================== */
+.timeline {
+  max-height: 200px;
+  overflow-y: auto;
+  display: flex;
+  gap: calc(var(--spacing-unit) * 2);
+  padding: calc(var(--spacing-unit) * 2);
+  background: var(--surface);
+  border-radius: var(--border-radius);
+}
+.timeline-item {
+  flex: 0 0 auto;
+  text-align: center;
+  min-width: 80px;
+}
+
+/* ==================== Utility Classes ==================== */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ==================== Reduced Motion ==================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ==================== Responsive Grid (for future layouts) ==================== */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: calc(var(--spacing-unit) * 2);
+}
+@media (min-width: 600px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ==================== Focus & Accessibility ==================== */
+button:focus,
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 3px solid var(--secondary);
+  outline-offset: 2px;
+}
+
+/* Custom scrollbars (WebKit) */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--secondary);
+  border-radius: 4px;
+}
