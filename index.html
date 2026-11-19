@@ -34,7 +34,7 @@
   <section id="badges" data-feature="earn-shareable-badge" aria-label="Badges obtenus" hidden>
     <h2>Mes badges</h2>
     <ul id="badge-list" class="badge-grid" aria-live="polite"></ul>
-    <button id="btn-share-badge" class="secondary" aria-haspopup="dialog">
+    <button id="btn-share-badge" class="secondary" aria-haspopup="dialog" data-feature="social-share">
       Partager mon dernier badge
     </button>
   </section>
@@ -84,7 +84,16 @@
     </button>
   </section>
 
-  <!-- Partage social – social-share (élément de support) -->
-  <div data-feature="social-share" hidden></div>
+  <!-- Navigation -->
+  <nav aria-label="Navigation principale">
+    <button id="nav-home" aria-controls="home" aria-expanded="false">Accueil</button>
+    <button id="nav-challenge" aria-controls="daily-challenge" aria-expanded="false">Défi</button>
+    <button id="nav-reflection" aria-controls="reflection" aria-expanded="false">Réflexion</button>
+    <button id="nav-badges" aria-controls="badges" aria-expanded="false">Badges</button>
+    <button id="nav-progress" aria-controls="progress" aria-expanded="false">Progression</button>
+    <button id="nav-profile" aria-controls="profile" aria-expanded="false">Profil</button>
+    <button id="nav-settings" aria-controls="settings" aria-expanded="false">Paramètres</button>
+    <button id="nav-offline" aria-controls="offline" aria-expanded="false">Hors ligne</button>
+  </nav>
 
 </main><footer class="tlm"><p>Créé par <a href="https://thelampsmark.pages.dev/" target="_blank" rel="noopener">The Lamp's Mark</a></p><p>Cette application est gratuite. Pour la soutenir : mobile money Africell <strong>0906253050</strong></p><p><a href="https://wa.me/?text=Youth%20Discipleship%20Challenge%20%E2%80%93%20Daily%20Faith%20Quest%20https%3A%2F%2Fdanymumbere.github.io%2Fyouth-discipleship-challenge%2F" target="_blank" rel="noopener">Partager sur WhatsApp</a> · <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdanymumbere.github.io%2Fyouth-discipleship-challenge%2F" target="_blank" rel="noopener">Facebook</a> · <button type="button" id="tlm-share">Partager</button></p></footer><script>document.getElementById('tlm-share').onclick=()=>navigator.share?navigator.share({title:document.title,url:location.href}):navigator.clipboard.writeText(location.href).then(()=>alert('Lien copié'))</script><script type="module" src="js/app.js"></script></body></html>
