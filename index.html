@@ -1,99 +1,68 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Youth Discipleship Challenge – Daily Faith Quest</title><meta name="description" content="A mobile‑first PWA that delivers a daily Bible challenge, a short reflection video, and a shareable badge, tracking progress locally and encouraging social sharing."><meta name="keywords" content="youth, discipleship, challenge, bible, faith, pwa, gamification, sharing"><link rel="canonical" href="https://danymumbere.github.io/youth-discipleship-challenge/"><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#0a7d6c"><meta property="og:type" content="website"><meta property="og:site_name" content="The Lamp's Mark"><meta property="og:title" content="Youth Discipleship Challenge – Daily Faith Quest"><meta property="og:description" content="A mobile‑first PWA that delivers a daily Bible challenge, a short reflection video, and a shareable badge, tracking progress locally and encouraging social sharing."><meta property="og:url" content="https://danymumbere.github.io/youth-discipleship-challenge/"><meta property="og:image" content="https://danymumbere.github.io/youth-discipleship-challenge/og.svg"><meta property="og:image:alt" content="Youth Discipleship Challenge – Daily Faith Quest"><meta property="og:locale" content="fr_FR"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Youth Discipleship Challenge – Daily Faith Quest"><meta name="twitter:description" content="A mobile‑first PWA that delivers a daily Bible challenge, a short reflection video, and a shareable badge, tracking progress locally and encouraging social sharing."><meta name="twitter:image" content="https://danymumbere.github.io/youth-discipleship-challenge/og.svg"><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Youth Discipleship Challenge – Daily Faith Quest","description":"A mobile‑first PWA that delivers a daily Bible challenge, a short reflection video, and a shareable badge, tracking progress locally and encouraging social sharing.","url":"https://danymumbere.github.io/youth-discipleship-challenge/","applicationCategory":"LifestyleApplication","inLanguage":"fr","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"creator":{"@type":"Organization","name":"The Lamp's Mark","url":"https://thelampsmark.pages.dev/"}}</script><link rel="stylesheet" href="style.css"></head><body><main id="app">
-
-  <!-- Page d’accueil – mobile‑responsive‑design -->
-  <section id="home" data-feature="mobile-responsive-design" aria-label="Accueil">
-    <h1>Défi de Discipulat Jeunesse</h1>
-    <p>Découvrez un verset biblique quotidien, relevez un défi pratique et regardez une brève réflexion pour approfondir votre foi. Relevez le défi chaque jour et gagnez des badges à partager avec votre communauté.</p>
-    <button id="btn-start" class="primary" aria-controls="daily-challenge" aria-expanded="false">
-      Commencer le défi du jour
-    </button>
-  </section>
-
-  <!-- Défi quotidien – daily-bible-challenge -->
-  <section id="daily-challenge" data-feature="daily-bible-challenge" aria-label="Défi quotidien" hidden>
-    <h2 id="verse-title">Verset du jour</h2>
-    <blockquote id="verse-text" class="verse" aria-live="polite"></blockquote>
-    <p id="challenge-text" class="challenge" aria-live="polite"></p>
-    <button id="btn-complete" class="primary" aria-pressed="false">
-      Valider le défi quotidien
-    </button>
-  </section>
-
-  <!-- Vidéo de réflexion – short-reflection-video -->
-  <section id="reflection" data-feature="short-reflection-video" aria-label="Réflexion vidéo" hidden>
-    <h2>Réflexion vidéo</h2>
-    <div id="video-container" class="video-wrapper" aria-live="polite">
-      <!-- L’iframe YouTube est injectée par le script -->
-    </div>
-    <button id="btn-replay" class="secondary">
-      Revoir la vidéo
-    </button>
-  </section>
-
-  <!-- Badges obtenus – earn-shareable-badge -->
-  <section id="badges" data-feature="earn-shareable-badge" aria-label="Badges obtenus" hidden>
-    <h2>Mes badges</h2>
-    <ul id="badge-list" class="badge-grid" aria-live="polite"></ul>
-    <button id="btn-share-badge" class="secondary" aria-haspopup="dialog" data-feature="social-share">
-      Partager mon dernier badge
-    </button>
-  </section>
-
-  <!-- Progression – local-score-tracking & progress-timeline -->
-  <section id="progress" aria-label="Progression" hidden>
-    <div data-feature="local-score-tracking">
-      <h2>Mon score</h2>
-      <p>Streak actuel : <span id="streak-count">0</span> jour(s)</p>
-      <p>Score total : <span id="total-score">0</span> points</p>
-    </div>
-    <div data-feature="progress-timeline">
-      <h3>Chronologie des défis</h3>
-      <div id="timeline" class="timeline" aria-label="Chronologie des défis" tabindex="0"></div>
-    </div>
-  </section>
-
-  <!-- Profil – accessibility -->
-  <section id="profile" data-feature="accessibility" aria-label="Profil" hidden>
-    <h2>Profil utilisateur</h2>
-    <p id="profile-name">Nom d’utilisateur : <span></span></p>
-    <button id="btn-edit-profile" class="secondary">
-      Modifier le profil
-    </button>
-  </section>
-
-  <!-- Paramètres – theme-customization -->
-  <section id="settings" data-feature="theme-customization" aria-label="Paramètres" hidden>
-    <h2>Paramètres</h2>
-    <fieldset>
-      <legend>Thème</legend>
-      <label><input type="radio" name="theme" value="light" checked> Clair</label>
-      <label><input type="radio" name="theme" value="dark"> Sombre</label>
-      <label><input type="radio" name="theme" value="high-contrast"> Haut contraste</label>
-    </fieldset>
-    <button id="btn-reset-data" class="danger">
-      Réinitialiser toutes les données
-    </button>
-  </section>
-
-  <!-- Mode hors‑ligne – offline-support -->
-  <section id="offline" data-feature="offline-support" aria-label="Mode hors‑ligne" hidden>
-    <h2>Hors ligne</h2>
-    <p>Vous êtes actuellement hors ligne. Le contenu déjà téléchargé reste accessible. Connectez-vous pour synchroniser vos progrès.</p>
-    <button id="btn-retry" class="primary">
-      Réessayer la connexion
-    </button>
-  </section>
-
-  <!-- Navigation -->
-  <nav aria-label="Navigation principale">
-    <button id="nav-home" aria-controls="home" aria-expanded="false">Accueil</button>
-    <button id="nav-challenge" aria-controls="daily-challenge" aria-expanded="false">Défi</button>
-    <button id="nav-reflection" aria-controls="reflection" aria-expanded="false">Réflexion</button>
-    <button id="nav-badges" aria-controls="badges" aria-expanded="false">Badges</button>
-    <button id="nav-progress" aria-controls="progress" aria-expanded="false">Progression</button>
-    <button id="nav-profile" aria-controls="profile" aria-expanded="false">Profil</button>
-    <button id="nav-settings" aria-controls="settings" aria-expanded="false">Paramètres</button>
-    <button id="nav-offline" aria-controls="offline" aria-expanded="false">Hors ligne</button>
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Youth Discipleship Challenge – Daily Faith Quest</title><meta name="description" content="A mobile‑first PWA that delivers a daily Bible challenge, a short reflection video, and a shareable badge, tracking progress locally and encouraging social sharing."><meta name="keywords" content="youth, discipleship, challenge, bible, faith, pwa, gamification, sharing"><link rel="canonical" href="https://danymumbere.github.io/youth-discipleship-challenge/"><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#0a7d6c"><meta property="og:type" content="website"><meta property="og:site_name" content="The Lamp's Mark"><meta property="og:title" content="Youth Discipleship Challenge – Daily Faith Quest"><meta property="og:description" content="A mobile‑first PWA that delivers a daily Bible challenge, a short reflection video, and a shareable badge, tracking progress locally and encouraging social sharing."><meta property="og:url" content="https://danymumbere.github.io/youth-discipleship-challenge/"><meta property="og:image" content="https://danymumbere.github.io/youth-discipleship-challenge/og.svg"><meta property="og:image:alt" content="Youth Discipleship Challenge – Daily Faith Quest"><meta property="og:locale" content="fr_FR"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Youth Discipleship Challenge – Daily Faith Quest"><meta name="twitter:description" content="A mobile‑first PWA that delivers a daily Bible challenge, a short reflection video, and a shareable badge, tracking progress locally and encouraging social sharing."><meta name="twitter:image" content="https://danymumbere.github.io/youth-discipleship-challenge/og.svg"><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Youth Discipleship Challenge – Daily Faith Quest","description":"A mobile‑first PWA that delivers a daily Bible challenge, a short reflection video, and a shareable badge, tracking progress locally and encouraging social sharing.","url":"https://danymumbere.github.io/youth-discipleship-challenge/","applicationCategory":"LifestyleApplication","inLanguage":"fr","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"creator":{"@type":"Organization","name":"The Lamp's Mark","url":"https://thelampsmark.pages.dev/"}}</script><link rel="stylesheet" href="style.css"></head><body><main>
+  <nav>
+    <button data-feature="home">Accueil</button>
+    <button data-feature="daily-challenge">Défi du jour</button>
+    <button data-feature="reflection">Réflexion</button>
+    <button data-feature="badges">Badges</button>
+    <button data-feature="progress">Progression</button>
+    <button data-feature="profile">Profil</button>
+    <button data-feature="settings">Paramètres</button>
+    <button data-feature="offline">Mode hors ligne</button>
   </nav>
 
+  <section id="home" data-feature="home">
+    <h1>Bienvenue dans le Défi de Discipleship pour les Jeunes</h1>
+    <p>Découvrez un nouveau défi biblique chaque jour, une réflexion vidéo courte et gagnez des badges à partager.</p>
+    <button id="verse-btn" data-feature="daily-bible-challenge">Commencer le défi du jour</button>
+  </section>
+
+  <section id="daily-challenge" data-feature="daily-challenge">
+    <h2>Défi du jour</h2>
+    <p id="challenge-description" data-feature="daily-bible-challenge"></p>
+    <div id="challenge-completion" data-feature="earn-shareable-badge"></div>
+    <div id="daily-badge" data-feature="earn-shareable-badge"></div>
+    <button data-feature="social-share">Partager sur WhatsApp</button>
+    <div id="error-msg" data-feature="offline-support"></div>
+  </section>
+
+  <section id="reflection" data-feature="short-reflection-video">
+    <h2>Réflexion du jour</h2>
+    <div id="video-container" data-feature="short-reflection-video">
+      <iframe id="reflection-video" width="100%" height="200" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    </div>
+  </section>
+
+  <section id="badges" data-feature="earn-shareable-badge">
+    <h2>Mes Badges</h2>
+    <div id="badge-collection" data-feature="earn-shareable-badge"></div>
+  </section>
+
+  <section id="progress" data-feature="progress-timeline">
+    <h2>Ma Progression</h2>
+    <div id="progress-bar" data-feature="local-score-tracking"></div>
+    <div id="progress-timeline" data-feature="progress-timeline"></div>
+  </section>
+
+  <section id="profile" data-feature="local-score-tracking">
+    <h2>Mon Profil</h2>
+    <p>Série en cours : <span id="current-streak" data-feature="local-score-tracking"></span></p>
+    <p>Score total : <span id="total-score" data-feature="local-score-tracking"></span></p>
+  </section>
+
+  <section id="settings" data-feature="theme-customization">
+    <h2>Paramètres</h2>
+    <label for="theme-select">Thème :</label>
+    <select id="theme-select" data-feature="theme-customization">
+      <option value="light">Clair</option>
+      <option value="dark">Sombre</option>
+      <option value="high-contrast">Haut contraste</option>
+    </select>
+    <button id="toggle-contrast" data-feature="accessibility">Activer le haut contraste</button>
+  </section>
+
+  <section id="offline" data-feature="offline-support">
+    <h2>Mode Hors Ligne</h2>
+    <p>L'application fonctionne même sans connexion internet.</p>
+    <p data-feature="mobile-responsive-design">Design adaptatif pour mobile et tablette.</p>
+  </section>
 </main><footer class="tlm"><p>Créé par <a href="https://thelampsmark.pages.dev/" target="_blank" rel="noopener">The Lamp's Mark</a></p><p>Cette application est gratuite. Pour la soutenir : mobile money Africell <strong>0906253050</strong></p><p><a href="https://wa.me/?text=Youth%20Discipleship%20Challenge%20%E2%80%93%20Daily%20Faith%20Quest%20https%3A%2F%2Fdanymumbere.github.io%2Fyouth-discipleship-challenge%2F" target="_blank" rel="noopener">Partager sur WhatsApp</a> · <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdanymumbere.github.io%2Fyouth-discipleship-challenge%2F" target="_blank" rel="noopener">Facebook</a> · <button type="button" id="tlm-share">Partager</button></p></footer><script>document.getElementById('tlm-share').onclick=()=>navigator.share?navigator.share({title:document.title,url:location.href}):navigator.clipboard.writeText(location.href).then(()=>alert('Lien copié'))</script><script type="module" src="js/app.js"></script></body></html>

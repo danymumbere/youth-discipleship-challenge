@@ -1,169 +1,138 @@
 // js/app.js
-import * as Bible from './bible.js';
-import * as Data from './data.js';
-import * as UI from './ui.js';
-import * as Storage from './storage.js';
-import * as Share from './share.js';
+// Orchestrateur principal : routage, initialisation, et coordination des modules.
+
+import { BIBLE_VERSES } from "./data.js";
+import { fetchTodaysVerse, generateChallengeText } from "./bible.js";
+import * as UI from "./ui.js";
+import * as Storage from "./storage.js";
+import * as Share from "./share.js";
 
 /**
- * Main Orchestrator for Youth Discipleship Challenge.
- * Handles routing, initialization, and event coordination.
+ * Initialisation de l’application au chargement du DOM.
  */
-
-const APP_SECTIONS = [
-  'home', 'daily-challenge', 'badges', 'progress', 'profile', 'settings', 'offline'
-];
-
-async function init() {
-  // 1. Service Worker Registration
-  if ('serviceWorker' in navigator) {
+document.addEventListener("DOMContentLoaded", async () => {
+  // 1. Enregistrement du Service Worker
+  if ("serviceWorker" in navigator) {
     try {
-      await navigator.serviceWorker.register('./sw.js');
+      await navigator.serviceWorker.register("./sw.js");
     } catch (err) {
-      console.error('Service Worker registration failed:', err);
+      console.error("Échec de l’enregistrement du Service Worker :", err);
     }
   }
 
-  // 2. Theme Initialization
-  const savedTheme = localStorage.getItem('theme') || 'light';
-  document.body.className = savedTheme === 'dark' ? 'dark-theme' : 'light-theme';
+  // 2. Initialisation des préférences (Thème et Contraste)
+  const savedTheme = localStorage.getItem("theme") || "light";
+  const savedContrast = localStorage.getItem("highContrast") === "true";
+  
+  const themeSelect = document.getElementById("theme-select");
+  const toggleContrastBtn = document.getElementById("toggle-contrast");
 
-  // 3. Navigation Setup
-  setupNavigation();
+  if (themeSelect) themeSelect.value = savedTheme;
+  UI.applyTheme(savedTheme);
+  UI.applyHighContrast(savedContrast);
 
-  // 4. Data Initialization
-  await refreshDashboard();
+  // 3. Chargement des données initiales
+  await initDailyChallenge();
+  updateProgressDisplay();
 
-  // 5. Button Listeners
+  // 4. Configuration des écouteurs d’événements
   setupEventListeners();
-}
 
-function setupNavigation() {
-  const navButtons = {
-    'nav-home': 'home',
-    'nav-challenge': 'daily-challenge',
-    'nav-reflection': 'daily-challenge',
-    'nav-badges': 'badges',
-    'nav-progress': 'progress',
-    'nav-profile': 'profile',
-    'nav-settings': 'settings',
-    'nav-offline': 'offline'
-  };
+  // 5. Gestion de l’état hors ligne
+  window.addEventListener("online", () => UI.hideOfflineBanner());
+  window.addEventListener("offline", () => UI.showOfflineBanner());
+});
 
-  Object.entries(navButtons).forEach(([btnId, sectionId]) => {
-    const btn = document.getElementById(btnId);
-    if (btn) {
-      btn.addEventListener('click', () => showSection(sectionId));
+/**
+ * Configure les écouteurs d’événements pour l’interface.
+ */
+function setupEventListeners() {
+  // Navigation : Bouton pour démarrer le défi
+  document.getElementById("verse-btn").addEventListener("click", () => {
+    UI.showSection("daily-challenge");
+  });
+
+  // Thème : Changement de sélection
+  document.getElementById("theme-select").addEventListener("change", (e) => {
+    const theme = e.target.value;
+    localStorage.setItem("theme", theme);
+    UI.applyTheme(theme);
+  });
+
+  // Contraste : Bascule
+  document.getElementById("toggle-contrast").addEventListener("click", () => {
+    const isHighContrast = localStorage.getItem("highContrast") === "true";
+    const newState = !isHighContrast;
+    localStorage.setItem("highContrast", newState.toString());
+    UI.applyHighContrast(newState);
+  });
+
+  // Partage : Bouton de badge
+  document.getElementById("daily-badge").addEventListener("click", async () => {
+    const verse = await fetchTodaysVerse();
+    const challengeText = generateChallengeText(verse);
+    const message = Share.buildShareMessage(verse, challengeText);
+    
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: "Mon défi biblique", text: message });
+      } catch (err) {
+        console.warn("Partage annulé ou échoué :", err);
+      }
+    } else {
+      alert("Le partage natif n’est pas supporté sur cet appareil.");
     }
   });
 }
 
-function showSection(sectionId) {
-  APP_SECTIONS.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.style.display = (id === sectionId) ? 'block' : 'none';
-  });
-}
-
-async function refreshDashboard() {
+/**
+ * Charge et affiche le défi du jour.
+ */
+async function initDailyChallenge() {
   try {
-    // Load Verse
-    const verse = await Bible.fetchTodaysVerse();
-    document.getElementById('verse-title').textContent = verse.reference;
-    document.getElementById('verse-text').textContent = verse.text;
-    document.getElementById('challenge-text').textContent = Bible.generateChallengeText(verse);
-
-    // Load Stats
-    const stats = Storage.getProgress();
-    document.getElementById('streak-count').textContent = `Série : ${stats.streak} jours`;
-    document.getElementById('total-score').textContent = `Score total : ${stats.score}`;
+    const verse = await fetchTodaysVerse();
+    const challengeText = generateChallengeText(verse);
     
-    // Load Profile
-    const name = localStorage.getItem('userName') || 'Discipule';
-    document.getElementById('profile-name').textContent = name;
+    const descEl = document.getElementById("challenge-description");
+    if (descEl) {
+      descEl.textContent = challengeText;
+    }
 
+    // Configuration de la vidéo (YouTube embed)
+    const videoEl = document.getElementById("reflection-video");
+    if (videoEl) {
+      // URL exemple basée sur le domaine public ou contenu éducatif
+      videoEl.src = "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1";
+    }
   } catch (error) {
-    console.error('Erreur lors du chargement des données :', error);
-    showSection('offline');
+    const errorEl = document.getElementById("error-msg");
+    if (errorEl) {
+      errorEl.textContent = "Impossible de charger le défi du jour. Vérifiez votre connexion.";
+      UI.showSection("error-msg");
+    }
   }
 }
 
-function setupEventListeners() {
-  // Start Button
-  document.getElementById('btn-start').addEventListener('click', () => showSection('daily-challenge'));
+/**
+ * Met à jour les éléments d’affichage de la progression.
+ */
+function updateProgressDisplay() {
+  const stats = Storage.getProgress();
+  
+  const streakEl = document.getElementById("current-streak");
+  const scoreEl = document.getElementById("total-score");
+  const barEl = document.getElementById("progress-bar");
 
-  // Complete Challenge
-  document.getElementById('btn-complete').addEventListener('click', async () => {
-    const stats = Storage.incrementProgress();
-    document.getElementById('streak-count').textContent = `Série : ${stats.streak} jours`;
-    document.getElementById('total-score').textContent = `Score total : ${stats.score}`;
-    
-    // Generate Badge
-    const badge = { name: `Discipule du jour ${stats.streak}`, image: 'badge.png' };
-    const badgeList = document.getElementById('badge-list');
-    const badgeEl = document.createElement('div');
-    badgeEl.className = 'badge-item';
-    badgeEl.innerHTML = `<p>Bravo ! Vous avez gagné : ${badge.name}</p>`;
-    badgeList.appendChild(badgeEl);
-    
-    alert('Défi complété ! Votre badge a été ajouté.');
-  });
-
-  // Replay Video
-  document.getElementById('btn-replay').addEventListener('click', () => {
-    const videoContainer = document.getElementById('video-container');
-    const iframe = videoContainer.querySelector('iframe');
-    if (iframe) {
-      const src = iframe.src;
-      iframe.src = '';
-      iframe.src = src;
-    }
-  });
-
-  // Share Badge
-  document.getElementById('btn-share-badge').addEventListener('click', async () => {
-    const stats = Storage.getProgress();
-    const badge = { name: `Discipule du jour ${stats.streak}`, image: 'badge.png' };
-    
-    try {
-      const imageBlob = await Share.buildShareImage(badge, stats.score);
-      if (navigator.share) {
-        await navigator.share({
-          title: 'Mon défi biblique',
-          text: 'Regardez mon progrès dans le Youth Discipleship Challenge !',
-          url: window.location.href
-        });
-      } else {
-        alert('Partage non supporté sur ce navigateur.');
-      }
-    } catch (err) {
-      console.error('Erreur de partage :', err);
-    }
-  });
-
-  // Edit Profile
-  document.getElementById('btn-edit-profile').addEventListener('click', () => {
-    const newName = prompt('Entrez votre nom :', localStorage.getItem('userName') || '');
-    if (newName) {
-      localStorage.setItem('userName', newName);
-      document.getElementById('profile-name').textContent = newName;
-    }
-  });
-
-  // Reset Data
-  document.getElementById('btn-reset-data').addEventListener('click', () => {
-    if (confirm('Êtes-vous sûr de vouloir réinitialiser toute votre progression ?')) {
-      localStorage.clear();
-      location.reload();
-    }
-  });
-
-  // Retry Connection
-  document.getElementById('btn-retry').addEventListener('click', async () => {
-    await refreshDashboard();
-    showSection('home');
-  });
+  if (streakEl) streakEl.textContent = `Série actuelle : ${stats.streak} jours`;
+  if (scoreEl) scoreEl.textContent = `Score total : ${stats.totalScore}`;
+  if (barEl) barEl.style.width = `${Math.min(stats.streak * 10, 100)}%`;
 }
 
-// Initialize App
-document.addEventListener('DOMContentLoaded', init);
+/**
+ * Marque le défi comme complété et met à jour le score.
+ */
+export async function completeChallenge() {
+  Storage.incrementScore();
+  updateProgressDisplay();
+  UI.showSection("challenge-completion");
+}
